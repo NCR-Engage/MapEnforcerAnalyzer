@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEnforcerAnalyzer", "MapEnforcerAnalyzer\MapEnforcerAnalyzer.csproj", "{AA301D7C-9CD3-4519-837C-722EFF701F5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEnforcerAnalyzer.Test", "MapEnforcerAnalyzer.Test\MapEnforcerAnalyzer.Test.csproj", "{0A8A759F-52A7-4B93-B889-E066C1310904}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEnforcerAnalyzer.Vsix", "MapEnforcerAnalyzer.Vsix\MapEnforcerAnalyzer.Vsix.csproj", "{C89183B9-6F97-4FB9-B534-B0680B1FAD98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA301D7C-9CD3-4519-837C-722EFF701F5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA301D7C-9CD3-4519-837C-722EFF701F5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA301D7C-9CD3-4519-837C-722EFF701F5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA301D7C-9CD3-4519-837C-722EFF701F5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A8A759F-52A7-4B93-B889-E066C1310904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A8A759F-52A7-4B93-B889-E066C1310904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A8A759F-52A7-4B93-B889-E066C1310904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A8A759F-52A7-4B93-B889-E066C1310904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C89183B9-6F97-4FB9-B534-B0680B1FAD98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C89183B9-6F97-4FB9-B534-B0680B1FAD98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C89183B9-6F97-4FB9-B534-B0680B1FAD98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C89183B9-6F97-4FB9-B534-B0680B1FAD98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
