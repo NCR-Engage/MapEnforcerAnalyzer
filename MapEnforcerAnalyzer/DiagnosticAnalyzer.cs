@@ -60,7 +60,7 @@ namespace NCR.Engage.RoslynAnalysis
             }
 
             var symbol = semModel.GetSymbolInfo(mapperAttribute).Symbol as IMethodSymbol;
-            if (!symbol?.ToString().StartsWith("NCR.Engage.RoslynAnalysis.Attributes.MapperAttribute") ?? true)
+            if (!symbol?.ToString().StartsWith("NCR.Engage.RoslynAnalysis.MapperAttribute") ?? true)
             {
                 yield break;
             }

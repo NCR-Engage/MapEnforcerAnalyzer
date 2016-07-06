@@ -121,6 +121,10 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MapEnforcerAnalyzer.Annotations\MapEnforcerAnalyzer.Annotations.csproj">
+      <Project>{99e3d894-3b28-4c13-83b7-78da96b864a6}</Project>
+      <Name>MapEnforcerAnalyzer.Annotations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MapEnforcerAnalyzer\MapEnforcerAnalyzer.csproj">
       <Project>{aa301d7c-9cd3-4519-837c-722eff701f5f}</Project>
       <Name>MapEnforcerAnalyzer</Name>

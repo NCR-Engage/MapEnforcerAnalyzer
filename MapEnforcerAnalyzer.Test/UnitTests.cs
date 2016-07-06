@@ -21,8 +21,7 @@ namespace NCR.Engage.RoslynAnalysis.Test
         public void ShouldFindBothUnmentionedProperties()
         {
             var test = @"
-using System;
-using NCR.Engage.RoslynAnalysis.Attributes;
+using NCR.Engage.RoslynAnalysis;
 
 namespace MyApp
 {
@@ -51,23 +50,6 @@ namespace MyApp
     {
         public int AA { get; set; }
     }
-}
-
-namespace NCR.Engage.RoslynAnalysis.Attributes
-{
-    [AttributeUsage(AttributeTargets.Class)]
-    public class MapperAttribute : Attribute
-    {
-        public Type From { get; set; }
-
-        public string[] ExcludedPropertyNames { get; set; }
-
-        public MapperAttribute(Type from, params string[] excludedPropertyNames)
-        {
-            From = from;
-            ExcludedPropertyNames = excludedPropertyNames;
-        }
-    }
 }";
 
             var expected1 = new DiagnosticResult
@@ -80,7 +62,7 @@ namespace NCR.Engage.RoslynAnalysis.Attributes
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 7, 6)
+                            new DiagnosticResultLocation("Test0.cs", 6, 6)
                         }
             };
 
@@ -94,7 +76,7 @@ namespace NCR.Engage.RoslynAnalysis.Attributes
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 7, 6)
+                            new DiagnosticResultLocation("Test0.cs", 6, 6)
                         }
             };
 
@@ -102,15 +84,14 @@ namespace NCR.Engage.RoslynAnalysis.Attributes
         }
 
         [TestMethod]
-        public void ShouldFindUnmentionedPropertyWithRespectToExclussionList()
+        public void ShouldFindUnmentionedPropertyWithRespectToExcludeFromMappingAttribute()
         {
             var test = @"
-using System;
-using NCR.Engage.RoslynAnalysis.Attributes;
+using NCR.Engage.RoslynAnalysis;
 
 namespace MyApp
 {
-    [Mapper(typeof(SourceDto), nameof(SourceDto.B), nameof(SourceDto.D))]
+    [Mapper(typeof(SourceDto))]
     public class MyMapper
     {
         public TargetDto Map(SourceDto source)
@@ -126,31 +107,16 @@ namespace MyApp
     {
         public int A { get; set; }
 
+        [ExcludeFromMapping]
         public int B { get; set; }
 
+        [ExcludeFromMapping]
         public int C { get; set; }
     }
 
     public class TargetDto
     {
         public int AA { get; set; }
-    }
-}
-
-namespace NCR.Engage.RoslynAnalysis.Attributes
-{
-    [AttributeUsage(AttributeTargets.Class)]
-    public class MapperAttribute : Attribute
-    {
-        public Type From { get; set; }
-
-        public string[] ExcludedPropertyNames { get; set; }
-
-        public MapperAttribute(Type from, params string[] excludedPropertyNames)
-        {
-            From = from;
-            ExcludedPropertyNames = excludedPropertyNames;
-        }
     }
 }";
             
