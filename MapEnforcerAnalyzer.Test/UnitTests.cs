@@ -135,7 +135,45 @@ namespace MyApp
 
             VerifyCSharpDiagnostic(test, expected2);
         }
-        
+
+        [TestMethod]
+        public void ClassNotMarkedAsMapperShouldNotBeSubjectToReporting()
+        {
+            var test = @"
+using NCR.Engage.RoslynAnalysis;
+
+namespace MyApp
+{
+    public class MyMapper
+    {
+        public TargetDto Map(SourceDto source)
+        {
+            return new TargetDto
+            {
+                AA = source.A
+            };
+        }
+    }
+
+    public class SourceDto
+    {
+        public int A { get; set; }
+
+        public int B { get; set; }
+
+        [ExcludeFromMapping]
+        public int C { get; set; }
+    }
+
+    public class TargetDto
+    {
+        public int AA { get; set; }
+    }
+}";
+            
+            VerifyCSharpDiagnostic(test);
+        }
+
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
             return new MapEnforcerAnalyzer();

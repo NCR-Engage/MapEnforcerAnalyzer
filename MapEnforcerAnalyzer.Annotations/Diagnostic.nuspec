@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>MapEnforcerAnalyzer</id>
+    <id>MapEnforcerAnalyzer.Annotations</id>
     <version>1.0.0.0</version>
-    <title>MapEnforcerAnalyzer</title>
+    <title>MapEnforcerAnalyzer.Annotations</title>
     <authors>NCR Corporation</authors>
     <owners>NCR Corporation</owners>
     <licenseUrl>https://github.com/NCR-Engage/MapEnforcerAnalyzer/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/NCR-Engage/MapEnforcerAnalyzer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Roslyn analyzer that enforces mapper classes to mention every property of the mapped object</description>
+    <description>MapEnforcerAnalyzer needs markers to function. This library contain two such markers, MapperAttribute and ExcludeFromMappingAttribute. The first says where the check should be performed, the second excludes source properties from the analysis.</description>
     <copyright>Apache license</copyright>
     <tags>MapEnforcerAnalyzer, analyzer, mapper, mapping</tags>
   </metadata>

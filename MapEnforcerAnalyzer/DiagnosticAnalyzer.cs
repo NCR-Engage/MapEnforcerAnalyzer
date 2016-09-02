@@ -64,14 +64,7 @@ namespace NCR.Engage.RoslynAnalysis
             {
                 yield break;
             }
-
-            var exceptions = mapperAttribute.ArgumentList.Arguments.Skip(1)
-                .Select(a => a.Expression as InvocationExpressionSyntax)
-                .Select(ie => semModel.GetConstantValue(ie))
-                .Where(cv => cv.HasValue)
-                .Select(cv => cv.Value.ToString())
-                .ToList();
-
+            
             var sourceClass = GetSourceSymbol(semModel, mapperAttribute);
 
             if (sourceClass == null)
@@ -90,11 +83,6 @@ namespace NCR.Engage.RoslynAnalysis
 
             foreach (var sourceProperty in sourceProperties)
             {
-                if (exceptions.Contains(sourceProperty.Name))
-                {
-                    continue;
-                }
-
                 if (IsPropertyMentioned(sourceProperty, mapperAttribute))
                 {
                     continue;

@@ -41,9 +41,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapperAttribute.cs" />
     <Compile Include="ExcludeFromMappingAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagnostic.nuspec">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="AfterBuild">
+    <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">
+      <Output TaskParameter="Assemblies" ItemName="MapEnforcerAnalyzerAnnotationsAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <Exec Command="&quot;$(SolutionDir)packages\NuGet.CommandLine.2.8.5\tools\NuGet.exe&quot; pack Diagnostic.nuspec -NoPackageAnalysis -Version 1.0.0 -OutputDirectory ." WorkingDirectory="$(OutDir)" ConsoleToMSBuild="true" ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

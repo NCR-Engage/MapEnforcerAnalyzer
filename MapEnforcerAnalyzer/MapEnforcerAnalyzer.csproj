@@ -36,7 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MapperAttribute.cs" />
     <Compile Include="DiagnosticAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -120,7 +119,7 @@
     <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">
       <Output TaskParameter="Assemblies" ItemName="MapEnforcerAnalyzerAssemblyInfo" />
     </GetAssemblyIdentity>
-    <Exec Command="&quot;$(SolutionDir)packages\NuGet.CommandLine.2.8.5\tools\NuGet.exe&quot; pack Diagnostic.nuspec -NoPackageAnalysis -Version 1.0.0-beta -OutputDirectory ." WorkingDirectory="$(OutDir)" ConsoleToMSBuild="true" ContinueOnError="true">
+    <Exec Command="&quot;$(SolutionDir)packages\NuGet.CommandLine.2.8.5\tools\NuGet.exe&quot; pack Diagnostic.nuspec -NoPackageAnalysis -Version 1.0.0 -OutputDirectory ." WorkingDirectory="$(OutDir)" ConsoleToMSBuild="true" ContinueOnError="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
