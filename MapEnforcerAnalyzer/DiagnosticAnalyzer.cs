@@ -15,7 +15,7 @@ namespace NCR.Engage.RoslynAnalysis
             new DiagnosticDescriptor(
                 "MEA001",
                 "All properties should be mapped.",
-                "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, add it to the list of Mapper attribute exceptions.",
+                "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                 "Naming",
                 DiagnosticSeverity.Error,
                 isEnabledByDefault: true);

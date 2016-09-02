@@ -56,7 +56,7 @@ namespace MyApp
             {
                 Id = "MEA001",
                 Message = String.Format(
-                    "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, add it to the list of Mapper attribute exceptions.",
+                    "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                     "SourceDto.B",
                     "MyMapper"),
                 Severity = DiagnosticSeverity.Error,
@@ -70,7 +70,7 @@ namespace MyApp
             {
                 Id = "MEA001",
                 Message = String.Format(
-                    "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, add it to the list of Mapper attribute exceptions.",
+                    "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                     "SourceDto.C",
                     "MyMapper"),
                 Severity = DiagnosticSeverity.Error,
@@ -123,7 +123,7 @@ namespace MyApp
             {
                 Id = "MEA001",
                 Message = String.Format(
-                    "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, add it to the list of Mapper attribute exceptions.",
+                    "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                     "SourceDto.B",
                     "MyMapper"),
                 Severity = DiagnosticSeverity.Error,
