@@ -59,7 +59,7 @@ namespace MyApp
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                     "SourceDto.B",
                     "MyMapper"),
-                Severity = DiagnosticSeverity.Error,
+                Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
                             new DiagnosticResultLocation("Test0.cs", 6, 6)
@@ -73,7 +73,7 @@ namespace MyApp
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                     "SourceDto.C",
                     "MyMapper"),
-                Severity = DiagnosticSeverity.Error,
+                Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
                             new DiagnosticResultLocation("Test0.cs", 6, 6)
@@ -126,7 +126,7 @@ namespace MyApp
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                     "SourceDto.B",
                     "MyMapper"),
-                Severity = DiagnosticSeverity.Error,
+                Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
                             new DiagnosticResultLocation("Test0.cs", 6, 6)
@@ -134,6 +134,40 @@ namespace MyApp
             };
 
             VerifyCSharpDiagnostic(test, expected2);
+        }
+
+        [TestMethod]
+        public void MentionWithSomeContinuationIsSufficient()
+        {
+            var test = @"
+using NCR.Engage.RoslynAnalysis;
+
+namespace MyApp
+{
+    [Mapper(typeof(SourceDto))]
+    public class MyMapper
+    {
+        public TargetDto Map(SourceDto source)
+        {
+            return new TargetDto
+            {
+                AA = source.A.Length
+            };
+        }
+    }
+
+    public class SourceDto
+    {
+        public string A { get; set; }
+    }
+
+    public class TargetDto
+    {
+        public int AA { get; set; }
+    }
+}";
+            
+            VerifyCSharpDiagnostic(test);
         }
 
         [TestMethod]
@@ -172,6 +206,71 @@ namespace MyApp
 }";
             
             VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void ShouldFindUnmentionedPropertyWithRespectToExcludeFromMappingAttributePresentAtMetadatedType()
+        {
+            var test = @"
+using NCR.Engage.RoslynAnalysis;
+using System.ComponentModel.DataAnnotations;
+
+namespace MyApp
+{
+    [Mapper(typeof(SourceDto))]
+    public class MyMapper
+    {
+        public TargetDto Map(SourceDto source)
+        {
+            return new TargetDto
+            {
+                AA = source.A
+            };
+        }
+    }
+
+    public partial class SourceDto
+    {
+        public int A { get; set; }
+
+        public int B { get; set; }
+
+        public int C { get; set; }
+    }
+
+    [MetadataType(typeof(SourceDtoMetadata))]
+    public partial class SourceDto
+    {
+
+    }
+
+    public class SourceDtoMetadata
+    {
+        [ExcludeFromMapping]
+        public int C { get; set; }
+    }
+
+    public class TargetDto
+    {
+        public int AA { get; set; }
+    }
+}";
+
+            var expected2 = new DiagnosticResult
+            {
+                Id = "MEA001",
+                Message = String.Format(
+                    "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
+                    "SourceDto.B",
+                    "MyMapper"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 7, 6)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(test, expected2);
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()

@@ -52,9 +52,6 @@
     </None>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">
-      <Output TaskParameter="Assemblies" ItemName="MapEnforcerAnalyzerAnnotationsAssemblyInfo" />
-    </GetAssemblyIdentity>
     <Exec Command="&quot;$(SolutionDir)packages\NuGet.CommandLine.2.8.5\tools\NuGet.exe&quot; pack Diagnostic.nuspec -NoPackageAnalysis -Version 1.0.0 -OutputDirectory ." WorkingDirectory="$(OutDir)" ConsoleToMSBuild="true" ContinueOnError="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>

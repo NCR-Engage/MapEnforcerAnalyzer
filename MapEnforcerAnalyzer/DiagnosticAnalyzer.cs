@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -17,7 +18,7 @@ namespace NCR.Engage.RoslynAnalysis
                 "All properties should be mapped.",
                 "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
                 "Naming",
-                DiagnosticSeverity.Error,
+                DiagnosticSeverity.Warning,
                 isEnabledByDefault: true);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(PropertyNotMapped);
@@ -27,20 +28,7 @@ namespace NCR.Engage.RoslynAnalysis
             context.RegisterSyntaxNodeAction(AnalyzeAttribute, SyntaxKind.Attribute);
             //context.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
         }
-
-        //private void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context)
-        //{
-        //    var mapperAttribute = (context.Node as ClassDeclarationSyntax)
-        //        ?.AttributeLists
-        //        .FirstOrDefault(a => a.ToString() == "Mapper") as AttributeSyntax;
-        //    var semModel = context.SemanticModel;
-
-        //    foreach (var d in Analyze(mapperAttribute, semModel))
-        //    {
-        //        context.ReportDiagnostic(d);
-        //    }
-        //}
-
+        
         private static void AnalyzeAttribute(SyntaxNodeAnalysisContext context)
         {
             var mapperAttribute = context.Node as AttributeSyntax;
@@ -72,7 +60,7 @@ namespace NCR.Engage.RoslynAnalysis
                 yield break;
             }
 
-            var sourceProperties = GetSourceProperties(sourceClass);
+            var sourceProperties = GetSourceProperties(semModel, sourceClass);
 
             var mapperClass = GetMapperClass(semModel, mapperAttribute);
 
@@ -102,17 +90,34 @@ namespace NCR.Engage.RoslynAnalysis
             return semModel.GetSymbolInfo(tSyntax).Symbol as ITypeSymbol;
         }
 
-        private static IEnumerable<IPropertySymbol> GetSourceProperties(ITypeSymbol sourceClass)
-            => sourceClass
-                    .GetMembers()
-                    .Where(m => m.Kind == SymbolKind.Property)
-                    .Cast<IPropertySymbol>()
-                    .Where(p => !IsExcludedFromMapping(p));
-        
-        private static bool IsExcludedFromMapping(IPropertySymbol property)
-            => property
-                    .GetAttributes()
-                    .Any(a => a.AttributeClass.ToString() == "NCR.Engage.RoslynAnalysis.ExcludeFromMappingAttribute");
+        private static IEnumerable<IPropertySymbol> GetSourceProperties(SemanticModel semModel, ITypeSymbol sourceClass)
+        {
+            ITypeSymbol metadataClass = null;
+            var metadataAttribute = sourceClass.GetAttributes().FirstOrDefault(attr => attr.AttributeClass.Name == "MetadataTypeAttribute");
+            if (metadataAttribute != null)
+            {
+                var metadataAttributeSyntax = metadataAttribute.ApplicationSyntaxReference.GetSyntax() as AttributeSyntax;
+                metadataClass = GetSourceSymbol(semModel, metadataAttributeSyntax);
+            }
+
+            return sourceClass
+                .GetMembers()
+                .Where(m => m.Kind == SymbolKind.Property)
+                .Cast<IPropertySymbol>()
+                .Where(p => !IsExcludedFromMapping(p, metadataClass));
+        }
+
+        private static bool IsExcludedFromMapping(IPropertySymbol property, ITypeSymbol metadataClass)
+        {
+            if (metadataClass != null)
+            {
+                property = (metadataClass.GetMembers(property.Name).FirstOrDefault() as IPropertySymbol) ?? property;
+            }
+
+            return property
+                .GetAttributes()
+                .Any(a => a.AttributeClass.ToString() == "NCR.Engage.RoslynAnalysis.ExcludeFromMappingAttribute");
+        }
 
         private static ITypeSymbol GetMapperClass(SemanticModel semModel, AttributeSyntax mapperAttribute)
         {

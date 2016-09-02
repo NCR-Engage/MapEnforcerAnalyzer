@@ -51,6 +51,7 @@ namespace TestHelper
         protected static Diagnostic[] GetSortedDiagnosticsFromDocuments(DiagnosticAnalyzer analyzer, Document[] documents)
         {
             var systemRuntimeReference = MetadataReference.CreateFromFile(Assembly.ReflectionOnlyLoad("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a").Location);
+            var metadataAttributeReference = MetadataReference.CreateFromFile(typeof(System.ComponentModel.DataAnnotations.MetadataTypeAttribute).Assembly.Location);
             var analyzerReference = MetadataReference.CreateFromFile(typeof(MapperAttribute).Assembly.Location);
             var annotationsReference = MetadataReference.CreateFromFile(typeof(ExcludeFromMappingAttribute).Assembly.Location);
 
@@ -58,7 +59,7 @@ namespace TestHelper
             foreach (var document in documents)
             {
                 var p = document.Project;
-                p = p.AddMetadataReferences(new[] { systemRuntimeReference, analyzerReference, annotationsReference });
+                p = p.AddMetadataReferences(new[] { systemRuntimeReference, metadataAttributeReference, analyzerReference, annotationsReference });
                 projects.Add(p);
             }
 
