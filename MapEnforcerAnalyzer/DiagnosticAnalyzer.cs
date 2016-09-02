@@ -157,6 +157,10 @@ namespace NCR.Engage.RoslynAnalysis
 
                     MentionFound = true;
                 }
+                else
+                {
+                    base.VisitMemberAccessExpression(node);
+                }
             }
         }
     }
