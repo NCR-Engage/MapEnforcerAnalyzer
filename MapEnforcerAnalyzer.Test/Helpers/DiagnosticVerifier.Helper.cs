@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 
 namespace TestHelper
 {
@@ -49,7 +50,7 @@ namespace TestHelper
         /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
         protected static Diagnostic[] GetSortedDiagnosticsFromDocuments(DiagnosticAnalyzer analyzer, Document[] documents)
         {
-            var systemRuntimeReference = MetadataReference.CreateFromFile(typeof(Type).Assembly.Location);
+            var systemRuntimeReference = MetadataReference.CreateFromFile(Assembly.ReflectionOnlyLoad("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a").Location);
             var analyzerReference = MetadataReference.CreateFromFile(typeof(MapperAttribute).Assembly.Location);
             var annotationsReference = MetadataReference.CreateFromFile(typeof(ExcludeFromMappingAttribute).Assembly.Location);
 

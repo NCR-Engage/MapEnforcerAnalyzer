@@ -115,12 +115,16 @@ namespace NCR.Engage.RoslynAnalysis
         }
 
         private static IEnumerable<IPropertySymbol> GetSourceProperties(ITypeSymbol sourceClass)
-        {
-            return sourceClass
-                .GetMembers()
-                .Where(m => m.Kind == SymbolKind.Property)
-                .Cast<IPropertySymbol>();
-        }
+            => sourceClass
+                    .GetMembers()
+                    .Where(m => m.Kind == SymbolKind.Property)
+                    .Cast<IPropertySymbol>()
+                    .Where(p => !IsExcludedFromMapping(p));
+        
+        private static bool IsExcludedFromMapping(IPropertySymbol property)
+            => property
+                    .GetAttributes()
+                    .Any(a => a.AttributeClass.ToString() == "NCR.Engage.RoslynAnalysis.ExcludeFromMappingAttribute");
 
         private static ITypeSymbol GetMapperClass(SemanticModel semModel, AttributeSyntax mapperAttribute)
         {

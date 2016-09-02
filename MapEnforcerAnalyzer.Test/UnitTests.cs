@@ -107,7 +107,6 @@ namespace MyApp
     {
         public int A { get; set; }
 
-        [ExcludeFromMapping]
         public int B { get; set; }
 
         [ExcludeFromMapping]
@@ -125,12 +124,12 @@ namespace MyApp
                 Id = "MEA001",
                 Message = String.Format(
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, add it to the list of Mapper attribute exceptions.",
-                    "SourceDto.C",
+                    "SourceDto.B",
                     "MyMapper"),
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 7, 6)
+                            new DiagnosticResultLocation("Test0.cs", 6, 6)
                         }
             };
 
