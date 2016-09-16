@@ -57,8 +57,8 @@ namespace MyApp
                 Id = "MEA001",
                 Message = String.Format(
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
-                    "SourceDto.B",
-                    "MyMapper"),
+                    "'int SourceDto.B'",
+                    "'MyMapper'"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
@@ -71,8 +71,8 @@ namespace MyApp
                 Id = "MEA001",
                 Message = String.Format(
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
-                    "SourceDto.C",
-                    "MyMapper"),
+                    "'int SourceDto.C'",
+                    "'MyMapper'"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
@@ -124,8 +124,8 @@ namespace MyApp
                 Id = "MEA001",
                 Message = String.Format(
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
-                    "SourceDto.B",
-                    "MyMapper"),
+                    "'int SourceDto.B'",
+                    "'MyMapper'"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
@@ -213,11 +213,10 @@ namespace MyApp
         {
             var test = @"
 using NCR.Engage.RoslynAnalysis;
-using System.ComponentModel.DataAnnotations;
 
 namespace MyApp
 {
-    [Mapper(typeof(SourceDto))]
+    [Mapper(typeof(SourceDto), typeof(SourceDtoMetadata))]
     public class MyMapper
     {
         public TargetDto Map(SourceDto source)
@@ -238,7 +237,6 @@ namespace MyApp
         public int C { get; set; }
     }
 
-    [MetadataType(typeof(SourceDtoMetadata))]
     public partial class SourceDto
     {
 
@@ -261,12 +259,12 @@ namespace MyApp
                 Id = "MEA001",
                 Message = String.Format(
                     "Property {0} was not mapped by {1}. Decide whether this is the intended behavior -- you should consider adding proper mapping code into {1} so the content of {0} won't get lost. If you are sure this property should not be mapped, mark it with ExcludeFromMapping attribute.",
-                    "SourceDto.B",
-                    "MyMapper"),
+                    "'int SourceDto.B'",
+                    "'MyMapper'"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 7, 6)
+                            new DiagnosticResultLocation("Test0.cs", 6, 6)
                         }
             };
 

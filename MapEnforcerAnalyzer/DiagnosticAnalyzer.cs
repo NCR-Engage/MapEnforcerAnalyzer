@@ -26,14 +26,13 @@ namespace NCR.Engage.RoslynAnalysis
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzeAttribute, SyntaxKind.Attribute);
-            //context.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
         }
         
         private static void AnalyzeAttribute(SyntaxNodeAnalysisContext context)
         {
             var mapperAttribute = context.Node as AttributeSyntax;
             var semModel = context.SemanticModel;
-
+            
             foreach (var d in Analyze(mapperAttribute, semModel))
             {
                 context.ReportDiagnostic(d);
@@ -53,14 +52,14 @@ namespace NCR.Engage.RoslynAnalysis
                 yield break;
             }
             
-            var sourceClass = GetSourceSymbol(semModel, mapperAttribute);
+            var sourceClass = GetSourceSymbols(semModel, mapperAttribute);
 
             if (sourceClass == null)
             {
                 yield break;
             }
 
-            var sourceProperties = GetSourceProperties(semModel, sourceClass);
+            var sourceProperties = GetSourceProperties(semModel, sourceClass.Item1, sourceClass.Item2);
 
             var mapperClass = GetMapperClass(semModel, mapperAttribute);
 
@@ -76,35 +75,33 @@ namespace NCR.Engage.RoslynAnalysis
                     continue;
                 }
 
-                var sourcePropertyName = sourceClass.Name + "." + sourceProperty.Name;
+                var sourcePropertyName = $"'{sourceProperty.Type} {sourceClass.Item1.Name}.{sourceProperty.Name}'";
+                var mapperClassName = $"'{mapperClass.Name}'";
 
-                yield return Diagnostic.Create(
-                    PropertyNotMapped, mapperAttribute.GetLocation(), sourcePropertyName, mapperClass.Name);
+                yield return Diagnostic.Create(PropertyNotMapped, mapperAttribute.GetLocation(), sourcePropertyName, mapperClassName);
             }
         }
 
-        private static ITypeSymbol GetSourceSymbol(SemanticModel semModel, AttributeSyntax mapperAttribute)
+        private static Tuple<ITypeSymbol, ITypeSymbol> GetSourceSymbols(SemanticModel semModel, AttributeSyntax mapperAttribute)
         {
-            var toExpr = mapperAttribute.ArgumentList.Arguments[0].Expression as TypeOfExpressionSyntax;
-            var tSyntax = toExpr?.Type;
-            return semModel.GetSymbolInfo(tSyntax).Symbol as ITypeSymbol;
+            var attrArguments = mapperAttribute.ArgumentList.Arguments;
+
+            var toExpr = attrArguments[0].Expression as TypeOfExpressionSyntax;
+            var toMetadataExpr = attrArguments.Count > 1 ? attrArguments[1].Expression as TypeOfExpressionSyntax : null;
+
+            var to = semModel.GetSymbolInfo(toExpr?.Type).Symbol as ITypeSymbol;
+            var toMetadata = toMetadataExpr == null ? null : semModel.GetSymbolInfo(toMetadataExpr.Type).Symbol as ITypeSymbol;
+
+            return Tuple.Create(to, toMetadata);
         }
 
-        private static IEnumerable<IPropertySymbol> GetSourceProperties(SemanticModel semModel, ITypeSymbol sourceClass)
+        private static IEnumerable<IPropertySymbol> GetSourceProperties(SemanticModel semModel, ITypeSymbol sourceClass, ITypeSymbol sourceMetadataClass)
         {
-            ITypeSymbol metadataClass = null;
-            var metadataAttribute = sourceClass.GetAttributes().FirstOrDefault(attr => attr.AttributeClass.Name == "MetadataTypeAttribute");
-            if (metadataAttribute != null)
-            {
-                var metadataAttributeSyntax = metadataAttribute.ApplicationSyntaxReference.GetSyntax() as AttributeSyntax;
-                metadataClass = GetSourceSymbol(semModel, metadataAttributeSyntax);
-            }
-
             return sourceClass
                 .GetMembers()
                 .Where(m => m.Kind == SymbolKind.Property)
                 .Cast<IPropertySymbol>()
-                .Where(p => !IsExcludedFromMapping(p, metadataClass));
+                .Where(p => !IsExcludedFromMapping(p, sourceMetadataClass));
         }
 
         private static bool IsExcludedFromMapping(IPropertySymbol property, ITypeSymbol metadataClass)
